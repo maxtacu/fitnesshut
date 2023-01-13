@@ -6,7 +6,7 @@ def create_message_with_attachment(attachment, recipient):
     subject = 'Sports reimbursement'
     body = '''
 Hello!<br>
-Here are attached my sports subscription (Fitnesshut) receipts for the last month<br>
+My sports subscription (Fitnesshut) receipts for the last month are attached to this mail<br>
 Regards,<br>
 Max
     '''
