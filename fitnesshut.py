@@ -42,8 +42,7 @@ def download_factura(months):
     if months > 3:
         print("Months range can be not more than 3 months")
         raise SystemExit(1)
-    monthTo = datetime.date.today() - datetime.timedelta(days=(months-3)*30)
-    monthTo = monthTo.strftime("%Y-%m")
+    monthTo = datetime.date.today().strftime("%Y-%m")
     monthFrom = months_from(months)
     print(f"Getting invoices between months {monthFrom} and {monthTo}")
     session.headers.update({
@@ -101,7 +100,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--jira', action='store_true', default=False)
     parser.add_argument('--outlook', action='store_true', default=False)
-    parser.add_argument('--months', '-m', type=int, default=0)
+    parser.add_argument('--confirm', action='store_true', default=False, description="Don't ask for confirmation before creating the ticket in JIRA")
+    parser.add_argument('--months', '-m', type=int, default=1)
     args = parser.parse_args()
 
     invoices, monthFrom, monthTo = download_factura(args.months)
@@ -114,6 +114,12 @@ def main():
         else:
             description = f"Gym invoices from {monthFrom} to {monthTo} months"
         jr = JIRA_ticket(server=JIRA_SERVER, token=JIRA_TOKEN)
+        if not args.confirm:
+            try:
+                input("Press Enter to create the ticket in JIRA")
+            except KeyboardInterrupt:
+                print("Exiting...")
+                sys.exit(1)
         ticket = jr.create_ticket(project_key=JIRA_PROJECT, summary=summary, description=description, issuetype=JIRA_ISSUE_TYPE)
         for invoice in invoices:
             jr.add_attachment(ticket, invoice)
