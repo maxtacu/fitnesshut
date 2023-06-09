@@ -98,10 +98,10 @@ def download_factura(months):
 def main():
     # parse script startup parameters using argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--jira', action='store_true', default=False)
-    parser.add_argument('--outlook', action='store_true', default=False)
-    parser.add_argument('--confirm', action='store_true', default=False, description="Don't ask for confirmation before creating the ticket in JIRA")
-    parser.add_argument('--months', '-m', type=int, default=1)
+    parser.add_argument('--jira', action='store_true', default=False, help="create a jira ticket")
+    parser.add_argument('--outlook', action='store_true', default=False, help="send email via outlook")
+    parser.add_argument('--confirm', action='store_true', default=False, help="Don't ask for confirmation before creating the ticket in JIRA")
+    parser.add_argument('--months', '-m', type=int, default=1, help="amount of months to retrieve the receipt")
     args = parser.parse_args()
 
     invoices, monthFrom, monthTo = download_factura(args.months)
@@ -113,13 +113,13 @@ def main():
             description = f"Gym invoices from {monthFrom} month"
         else:
             description = f"Gym invoices from {monthFrom} to {monthTo} months"
-        jr = JIRA_ticket(server=JIRA_SERVER, token=JIRA_TOKEN)
         if not args.confirm:
             try:
                 input("Press Enter to create the ticket in JIRA")
             except KeyboardInterrupt:
                 print("Exiting...")
                 sys.exit(1)
+        jr = JIRA_ticket(server=JIRA_SERVER, token=JIRA_TOKEN)
         ticket = jr.create_ticket(project_key=JIRA_PROJECT, summary=summary, description=description, issuetype=JIRA_ISSUE_TYPE)
         for invoice in invoices:
             jr.add_attachment(ticket, invoice)
