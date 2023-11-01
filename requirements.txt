@@ -1,6 +1,6 @@
 appscript==1.2.2
 certifi==2023.7.22
-charset-normalizer==3.2.0
+charset-normalizer==3.3.2
 idna==3.4
 lxml==4.9.3
 python-dotenv==0.21.1
