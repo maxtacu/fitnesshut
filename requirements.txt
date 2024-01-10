@@ -1,4 +1,4 @@
-appscript==1.2.2
+appscript==1.2.5
 certifi==2023.7.22
 charset-normalizer==3.2.0
 idna==3.4
